@@ -47,7 +47,6 @@
     "@semantic-release/commit-analyzer": "^9.0.1",
     "@semantic-release/github": "^8.0.1",
     "@semantic-release/release-notes-generator": "^10.0.2",
-    "@types/express": "^4.17.13",
     "@types/ioredis": "^4.27.7",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.0.0",
