@@ -1,19 +1,34 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { FastifyServerOptions } from 'fastify';
+import { fastifyHelmet } from 'fastify-helmet';
 import { AppModule } from './app.module';
 import { Config } from './common/config/configuration';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const adapterOptions: FastifyServerOptions = {
+    ignoreTrailingSlash: true,
+    rewriteUrl: (req) => {
+      // Semicolons in the url need to be parsed
+      // https://github.com/fastify/fastify/issues/2487
+      return req.url.replace(/;/g, '%3B');
+    },
+    trustProxy: process.env.NODE_ENV === 'production',
+  };
+
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter(adapterOptions),
+  );
   const configService: ConfigService<Config> = app.get(ConfigService);
 
-  app.enableShutdownHooks();
-  app.disable('x-powered-by');
+  await app.register(fastifyHelmet);
 
-  if (process.env.NODE_ENV === 'production') {
-    app.set('trust proxy', true);
-  }
+  app.enableShutdownHooks();
 
   await app.listen(configService.get<number>('port'));
 }
