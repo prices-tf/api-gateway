@@ -11,6 +11,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './custom-throttler.guard';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
+import { AuthModule } from './auth/auth.module';
 import * as Redis from 'ioredis';
 
 @Module({
@@ -58,6 +59,7 @@ import * as Redis from 'ioredis';
     }),
     PricesModule,
     SnapshotsModule,
+    AuthModule,
   ],
   providers: [
     {

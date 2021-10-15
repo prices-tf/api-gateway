@@ -21,6 +21,7 @@ export interface RedisConfig {
 export interface Services {
   snapshots: string;
   prices: string;
+  jwk: string;
 }
 
 export default (): Config => {
@@ -43,6 +44,7 @@ export default (): Config => {
     services: {
       snapshots: process.env.BPTF_SNAPSHOT_SERVICE_URL,
       prices: process.env.BPTF_PRICE_SERVICE_URL,
+      jwk: process.env.JWK_SERVICE_URL,
     },
   };
 };

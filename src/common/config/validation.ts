@@ -12,6 +12,7 @@ const validation = Joi.object({
   REDIS_SET: Joi.string().optional(),
   BPTF_SNAPSHOT_SERVICE_URL: Joi.string().required(),
   BPTF_PRICE_SERVICE_URL: Joi.string().required(),
+  JWK_SERVICE_URL: Joi.string().required(),
 });
 
 export { validation };
