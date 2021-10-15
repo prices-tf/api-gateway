@@ -9,6 +9,7 @@ async function bootstrap() {
   const configService: ConfigService<Config> = app.get(ConfigService);
 
   app.enableShutdownHooks();
+  app.disable('x-powered-by');
 
   if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', true);
