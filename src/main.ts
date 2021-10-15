@@ -10,6 +10,10 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
+  if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', true);
+  }
+
   await app.listen(configService.get<number>('port'));
 }
 bootstrap();
