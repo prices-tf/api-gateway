@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PricesModule } from './prices/prices.module';
-import configuration from './common/config/configuration';
+import configuration, { Config } from './common/config/configuration';
 import { validation } from './common/config/validation';
 import { SnapshotsModule } from './snapshots/snapshots.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { CustomThrottlerGuard } from './custom-throttler.guard';
 
 @Module({
   imports: [
@@ -13,8 +16,25 @@ import { SnapshotsModule } from './snapshots/snapshots.module';
       load: [configuration],
       validationSchema: validation,
     }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<Config>) => {
+        const throttleConfig = configService.get('throttle');
+        return {
+          ttl: throttleConfig.ttl,
+          limit: throttleConfig.limit,
+        };
+      },
+    }),
     PricesModule,
     SnapshotsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
