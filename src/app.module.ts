@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PricesModule } from './prices/prices.module';
-import configuration, { Config } from './common/config/configuration';
+import configuration, {
+  Config,
+  RedisConfig,
+} from './common/config/configuration';
 import { validation } from './common/config/validation';
 import { SnapshotsModule } from './snapshots/snapshots.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './custom-throttler.guard';
+import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
+import * as Redis from 'ioredis';
 
 @Module({
   imports: [
@@ -20,10 +25,34 @@ import { CustomThrottlerGuard } from './custom-throttler.guard';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<Config>) => {
+        const queueConfig = configService.get<RedisConfig>('redis');
+
+        let redisConfig: Redis.RedisOptions;
+
+        if (queueConfig.isSentinel) {
+          redisConfig = {
+            sentinels: [
+              {
+                host: queueConfig.host,
+                port: queueConfig.port,
+              },
+            ],
+            name: queueConfig.set,
+          };
+        } else {
+          redisConfig = {
+            host: queueConfig.host,
+            port: queueConfig.port,
+            password: queueConfig.password,
+          };
+        }
+
         const throttleConfig = configService.get('throttle');
+
         return {
           ttl: throttleConfig.ttl,
           limit: throttleConfig.limit,
+          storage: new ThrottlerStorageRedisService(redisConfig),
         };
       },
     }),
