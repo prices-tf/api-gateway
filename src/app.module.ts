@@ -13,6 +13,7 @@ import { CustomThrottlerGuard } from './custom-throttler.guard';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { AuthModule } from './auth/auth.module';
 import * as Redis from 'ioredis';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -63,8 +64,14 @@ import * as Redis from 'ioredis';
   ],
   providers: [
     {
+      // Throttle all requests
       provide: APP_GUARD,
       useClass: CustomThrottlerGuard,
+    },
+    {
+      // Require auth by default
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })
