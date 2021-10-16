@@ -7,13 +7,15 @@ import configuration, {
 } from './common/config/configuration';
 import { validation } from './common/config/validation';
 import { SnapshotsModule } from './snapshots/snapshots.module';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerModule as NestThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './custom-throttler.guard';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { AuthModule } from './auth/auth.module';
 import * as Redis from 'ioredis';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { ThrottlerModule } from './throttler/throttler.module';
+import { ThrottlerService } from './throttler/throttler.service';
 
 @Module({
   imports: [
@@ -23,44 +25,28 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       load: [configuration],
       validationSchema: validation,
     }),
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<Config>) => {
-        const queueConfig = configService.get<RedisConfig>('redis');
-
-        let redisConfig: Redis.RedisOptions;
-
-        if (queueConfig.isSentinel) {
-          redisConfig = {
-            sentinels: [
-              {
-                host: queueConfig.host,
-                port: queueConfig.port,
-              },
-            ],
-            name: queueConfig.set,
-          };
-        } else {
-          redisConfig = {
-            host: queueConfig.host,
-            port: queueConfig.port,
-            password: queueConfig.password,
-          };
-        }
-
+    NestThrottlerModule.forRootAsync({
+      imports: [ConfigModule, ThrottlerModule],
+      inject: [ConfigService, ThrottlerService],
+      useFactory: (
+        configService: ConfigService<Config>,
+        throttlerService: ThrottlerService,
+      ) => {
         const throttleConfig = configService.get('throttle');
 
         return {
           ttl: throttleConfig.ttl,
           limit: throttleConfig.limit,
-          storage: new ThrottlerStorageRedisService(redisConfig),
+          storage: new ThrottlerStorageRedisService(
+            throttlerService.getRedis(),
+          ),
         };
       },
     }),
     PricesModule,
     SnapshotsModule,
     AuthModule,
+    ThrottlerModule,
   ],
   providers: [
     {
