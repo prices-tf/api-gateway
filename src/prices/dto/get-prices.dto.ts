@@ -35,6 +35,8 @@ export class GetPricesDto {
     required: false,
     enum: OrderEnum,
     enumName: 'OrderEnum',
+    description:
+      'Ordering the prices depending on the time the item was last priced',
   })
   @IsOptional()
   @IsEnum(OrderEnum)
