@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PricesModule } from './prices/prices.module';
-import configuration, {
-  Config,
-  RedisConfig,
-} from './common/config/configuration';
+import configuration, { Config } from './common/config/configuration';
 import { validation } from './common/config/validation';
 import { SnapshotsModule } from './snapshots/snapshots.module';
 import { ThrottlerModule as NestThrottlerModule } from '@nestjs/throttler';
@@ -12,10 +9,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './custom-throttler.guard';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { AuthModule } from './auth/auth.module';
-import * as Redis from 'ioredis';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ThrottlerModule } from './throttler/throttler.module';
 import { ThrottlerService } from './throttler/throttler.service';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -43,6 +40,7 @@ import { ThrottlerService } from './throttler/throttler.service';
         };
       },
     }),
+    HealthModule,
     PricesModule,
     SnapshotsModule,
     AuthModule,
