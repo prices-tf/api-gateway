@@ -9,6 +9,13 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
   }
 
   getTracker(req: FastifyRequest): string {
+    if (
+      req.headers['cf-connecting-ip'] !== undefined &&
+      !Array.isArray(req.headers['cf-connecting-ip'])
+    ) {
+      return req.headers['cf-connecting-ip'];
+    }
+
     return req.ips?.length > 0 ? req.ips[0] : req.ip;
   }
 }
