@@ -17,8 +17,8 @@ export class AuthService {
       .post(url, {
         payload: {},
         issuedAt: new Date(),
-        // Make access token expire after two minutes
-        expiresAt: new Date(new Date().getTime() + 2 * 60 * 1000),
+        // Make access token expire after 10 minutes
+        expiresAt: new Date(new Date().getTime() + 10 * 60 * 1000),
       })
       .toPromise()
       .then((response) => response.data.jwt);
