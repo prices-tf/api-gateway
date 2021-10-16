@@ -13,7 +13,23 @@ import { SnapshotsService } from '../snapshots/snapshots.service';
 import { GetPricesDto } from './dto/get-prices.dto';
 import { Price } from './interfaces/price.interface';
 import { PricesService } from './prices.service';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { PriceModel } from './models/price.model';
+import { PaginatedModel } from '../common/models/paginated.model';
+import { ApiParamSKU } from '../common/swagger/api-param-sku.decorator';
+import { RefreshPriceModel } from './models/refresh-price.model';
 
+@ApiTags('Prices')
+@ApiBearerAuth('access-token')
+@ApiExtraModels(PaginatedModel, PriceModel)
 @Controller('prices')
 export class PricesController {
   constructor(
@@ -22,7 +38,30 @@ export class PricesController {
   ) {}
 
   @Get()
-  private getAll(
+  @ApiOperation({
+    summary: 'Paginate prices.',
+    description: 'Use page and limit to paginate prices',
+  })
+  @ApiOkResponse({
+    status: 200,
+    schema: {
+      allOf: [
+        {
+          $ref: getSchemaPath(PaginatedModel),
+        },
+        {
+          properties: {
+            items: {
+              type: 'array',
+              items: { $ref: getSchemaPath(PriceModel) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Invalid pagination options' })
+  getAll(
     @Query(
       new ValidationPipe({
         transform: true,
@@ -34,13 +73,33 @@ export class PricesController {
   }
 
   @Get(':sku')
-  private getBySKU(@Param('sku') sku: string): Promise<Price> {
+  @ApiParamSKU()
+  @ApiOperation({
+    summary: 'Get price of an item.',
+    description: 'Gets the price of an item. Fails if the item is not priced',
+  })
+  @ApiOkResponse({
+    status: 200,
+    type: PriceModel,
+  })
+  @ApiResponse({ status: 404, description: 'Item is not priced' })
+  getBySKU(@Param('sku') sku: string): Promise<Price> {
     return this.priceService.getBySKU(sku);
   }
 
   @Post(':sku/refresh')
+  @ApiParamSKU()
+  @ApiOperation({
+    summary: 'Requests an item to be priced.',
+    description:
+      'Requests an item to be priced, will get new data from backpack.tf and try to create a price for the item. If the item is already in the queue then nothing happens.',
+  })
+  @ApiOkResponse({
+    status: 200,
+    type: RefreshPriceModel,
+  })
   @HttpCode(200)
-  private refresh(@Param('sku') sku: string): Promise<Refresh> {
+  refresh(@Param('sku') sku: string): Promise<Refresh> {
     return this.snapshotService.refresh(sku);
   }
 }

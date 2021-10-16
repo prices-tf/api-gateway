@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Config, Services } from 'src/common/config/configuration';
+import { Config, Services } from '../common/config/configuration';
 
 @Injectable()
 export class AuthService {
