@@ -13,6 +13,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ThrottlerModule } from './throttler/throttler.module';
 import { ThrottlerService } from './throttler/throttler.service';
 import { HealthModule } from './health/health.module';
+import { InternalGuard } from './internal.guard';
 
 @Module({
   imports: [
@@ -56,6 +57,10 @@ import { HealthModule } from './health/health.module';
       // Require auth by default
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: InternalGuard,
     },
   ],
 })

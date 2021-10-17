@@ -1,8 +1,8 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-import * as jwksClient from 'jwks-rsa';
+import jwt from 'jsonwebtoken';
+import jwksClient from 'jwks-rsa';
 import { ConfigService } from '@nestjs/config';
 import { Config, Services } from '../common/config/configuration';
 import { FastifyRequest } from 'fastify';

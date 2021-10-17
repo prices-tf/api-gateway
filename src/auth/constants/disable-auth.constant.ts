@@ -1,0 +1,2 @@
+export const DISABLE_JWT_AUTH_KEY = 'DISABLE_JWT_AUTH';
+export const DISABLE_AUTH_KEY = 'DISABLE_AUTH';

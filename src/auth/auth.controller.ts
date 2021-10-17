@@ -1,7 +1,7 @@
 import { Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { Public } from './decorators/public.decorator';
+import { DisableAuth } from './decorators/disable-auth.decorator';
 import { AccessTokenModel } from './models/access-token.model';
 
 @ApiTags('Auth')
@@ -21,7 +21,7 @@ export class AuthController {
   })
   // No need to be authenticated to generate token
   // TODO: Authenticate using API key
-  @Public()
+  @DisableAuth()
   @HttpCode(200)
   getAccessToken(): Promise<{
     accessToken: string;
