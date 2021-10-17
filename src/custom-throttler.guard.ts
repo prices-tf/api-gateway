@@ -9,6 +9,6 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
   }
 
   getTracker(req: FastifyRequest): string {
-    return req.ips?.length > 0 ? req.ips[0] : req.ip;
+    return req.ip;
   }
 }
