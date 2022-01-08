@@ -14,6 +14,7 @@ import { ThrottlerModule } from './throttler/throttler.module';
 import { ThrottlerService } from './throttler/throttler.service';
 import { HealthModule } from './health/health.module';
 import { InternalGuard } from './internal.guard';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { InternalGuard } from './internal.guard';
     }),
     HealthModule,
     PricesModule,
+    HistoryModule,
     SnapshotsModule,
     AuthModule,
     ThrottlerModule,
