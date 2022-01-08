@@ -22,6 +22,7 @@ export interface Services {
   snapshots: string;
   prices: string;
   jwk: string;
+  history: string;
 }
 
 export default (): Config => {
@@ -45,6 +46,7 @@ export default (): Config => {
       snapshots: process.env.BPTF_SNAPSHOT_SERVICE_URL,
       prices: process.env.BPTF_PRICE_SERVICE_URL,
       jwk: process.env.JWK_SERVICE_URL,
+      history: process.env.BPTF_PRICE_HISTORY_SERVICE_URL,
     },
   };
 };
