@@ -10,6 +10,12 @@ const validation = Joi.object({
   REDIS_PORT: Joi.number().required(),
   REDIS_PASSWORD: Joi.string().optional(),
   REDIS_SET: Joi.string().optional(),
+  // Only allow CORS_ORIGIN when not in production
+  CORS_ORIGIN: Joi.string().when('NODE_ENV', {
+    is: 'production',
+    then: Joi.forbidden(),
+    otherwise: Joi.required(),
+  }),
   BPTF_SNAPSHOT_SERVICE_URL: Joi.string().required(),
   BPTF_PRICE_SERVICE_URL: Joi.string().required(),
   JWK_SERVICE_URL: Joi.string().required(),

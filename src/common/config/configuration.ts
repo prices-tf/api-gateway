@@ -2,7 +2,12 @@ export interface Config {
   port: number;
   throttle: ThrottleConfig;
   redis: RedisConfig;
+  cors: CorsConfig;
   services: Services;
+}
+
+export interface CorsConfig {
+  origin: string;
 }
 
 export interface ThrottleConfig {
@@ -41,6 +46,9 @@ export default (): Config => {
       port: parseInt(process.env.REDIS_PORT, 10),
       password: process.env.REDIS_PASSWORD,
       set: process.env.REDIS_SET,
+    },
+    cors: {
+      origin: process.env.CORS_ORIGIN ?? 'https://prices.tf',
     },
     services: {
       snapshots: process.env.BPTF_SNAPSHOT_SERVICE_URL,

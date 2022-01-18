@@ -8,7 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyServerOptions } from 'fastify';
 import { fastifyHelmet } from 'fastify-helmet';
 import { AppModule } from './app.module';
-import { Config } from './common/config/configuration';
+import { Config, CorsConfig } from './common/config/configuration';
 
 async function bootstrap() {
   const adapterOptions: FastifyServerOptions = {
@@ -63,6 +63,10 @@ async function bootstrap() {
   });
 
   app.enableShutdownHooks();
+
+  app.enableCors({
+    origin: configService.get<CorsConfig>('cors').origin,
+  });
 
   await app.listen(configService.get<number>('port'), '0.0.0.0');
 }
