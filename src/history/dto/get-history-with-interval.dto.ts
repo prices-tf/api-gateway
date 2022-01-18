@@ -10,7 +10,6 @@ export class GetHistoryWithIntervalDto {
     default: 3600000,
     required: true,
   })
-  @IsOptional()
   @IsInt()
   @IsPositive()
   @Min(1800000)
