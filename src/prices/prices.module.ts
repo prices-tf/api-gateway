@@ -3,10 +3,9 @@ import { PricesService } from './prices.service';
 import { PricesController } from './prices.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
-import { SnapshotsModule } from '../snapshots/snapshots.module';
 
 @Module({
-  imports: [HttpModule, ConfigModule, SnapshotsModule],
+  imports: [HttpModule, ConfigModule],
   providers: [PricesService],
   controllers: [PricesController],
 })

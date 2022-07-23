@@ -16,7 +16,6 @@ const validation = Joi.object({
     then: Joi.forbidden(),
     otherwise: Joi.required(),
   }),
-  BPTF_SNAPSHOT_SERVICE_URL: Joi.string().required(),
   BPTF_PRICE_SERVICE_URL: Joi.string().required(),
   JWK_SERVICE_URL: Joi.string().required(),
   BPTF_PRICE_HISTORY_SERVICE_URL: Joi.string().required(),

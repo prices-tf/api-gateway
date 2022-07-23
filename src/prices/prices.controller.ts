@@ -7,9 +7,7 @@ import {
   Query,
   ValidationPipe,
 } from '@nestjs/common';
-import { Refresh } from '../snapshots/interfaces/refresh.interface';
 import { Paginated } from '../common/interfaces/paginated.interface';
-import { SnapshotsService } from '../snapshots/snapshots.service';
 import { GetPricesDto } from './dto/get-prices.dto';
 import { Price } from './interfaces/price.interface';
 import { PricesService } from './prices.service';
@@ -25,21 +23,19 @@ import {
 import { PriceModel } from './models/price.model';
 import { PaginatedModel } from '../common/models/paginated.model';
 import { ApiParamSKU } from '../common/swagger/api-param-sku.decorator';
-import { RefreshPriceModel } from './models/refresh-price.model';
+import { CheckPriceModel } from './models/check-price.model';
+import { CheckPrice } from './interfaces/check-price.interface';
 
 @ApiTags('Prices')
 @ApiBearerAuth('access-token')
 @ApiExtraModels(PaginatedModel, PriceModel)
 @Controller('prices')
 export class PricesController {
-  constructor(
-    private readonly priceService: PricesService,
-    private readonly snapshotService: SnapshotsService,
-  ) {}
+  constructor(private readonly priceService: PricesService) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Paginate prices.',
+    summary: 'Paginate prices',
     description: 'Use page and limit to paginate prices',
   })
   @ApiOkResponse({
@@ -75,7 +71,7 @@ export class PricesController {
   @Get(':sku')
   @ApiParamSKU()
   @ApiOperation({
-    summary: 'Get price of an item.',
+    summary: 'Get price of an item',
     description: 'Gets the price of an item. Fails if the item is not priced',
   })
   @ApiOkResponse({
@@ -90,16 +86,16 @@ export class PricesController {
   @Post(':sku/refresh')
   @ApiParamSKU()
   @ApiOperation({
-    summary: 'Requests an item to be priced.',
+    summary: 'Requests an item to be priced',
     description:
-      'Requests an item to be priced, will get new data from backpack.tf and try to create a price for the item. If the item is already in the queue then nothing happens.',
+      'Requests an item to be priced by adding it to the price check queue',
   })
   @ApiOkResponse({
     status: 200,
-    type: RefreshPriceModel,
+    type: CheckPriceModel,
   })
   @HttpCode(200)
-  refresh(@Param('sku') sku: string): Promise<Refresh> {
-    return this.snapshotService.refresh(sku);
+  refresh(@Param('sku') sku: string): Promise<CheckPrice> {
+    return this.priceService.checkBySKU(sku);
   }
 }

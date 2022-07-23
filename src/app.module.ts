@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { PricesModule } from './prices/prices.module';
 import configuration from './common/config/configuration';
 import { validation } from './common/config/validation';
-import { SnapshotsModule } from './snapshots/snapshots.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
@@ -22,7 +21,6 @@ import { HistoryModule } from './history/history.module';
     HealthModule,
     PricesModule,
     HistoryModule,
-    SnapshotsModule,
     AuthModule,
   ],
   providers: [

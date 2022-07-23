@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Paginated } from '../common/interfaces/paginated.interface';
 import { Config, Services } from '../common/config/configuration';
 import { Price } from './interfaces/price.interface';
+import { CheckPrice } from './interfaces/check-price.interface';
 
 @Injectable()
 export class PricesService {
@@ -49,5 +50,21 @@ export class PricesService {
 
         throw err;
       });
+  }
+
+  async checkBySKU(sku: string): Promise<CheckPrice> {
+    const url = `${
+      this.configService.get<Services>('services').prices
+    }/prices/sku/${sku}/check`;
+
+    const result = await this.httpService
+      .post(url)
+      .toPromise()
+      .then((response) => response.data);
+
+    return {
+      enqueued: result.enqueued,
+      state: result.state,
+    };
   }
 }
