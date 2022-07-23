@@ -6,7 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyServerOptions } from 'fastify';
-import { fastifyHelmet } from 'fastify-helmet';
+import fastifyHelmet from '@fastify/helmet';
 import { AppModule } from './app.module';
 import { Config, CorsConfig } from './common/config/configuration';
 
