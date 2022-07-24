@@ -1,5 +1,9 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Paginated } from '../common/interfaces/paginated.interface';
 import { Config, Services } from '../common/config/configuration';
@@ -54,7 +58,9 @@ export class PricesService {
   }
 
   async checkBySKU(sku: string): Promise<CheckPrice> {
-    sku = SKU.fromObject(SKU.fromString(sku));
+    if (sku !== SKU.fromObject(SKU.fromString(sku))) {
+      throw new BadRequestException('Invalid SKU');
+    }
 
     const url = `${
       this.configService.get<Services>('services').prices
