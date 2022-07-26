@@ -9,7 +9,7 @@ import { Paginated } from '../common/interfaces/paginated.interface';
 import { Config, Services } from '../common/config/configuration';
 import { Price } from './interfaces/price.interface';
 import { CheckPrice } from './interfaces/check-price.interface';
-import * as SKU from 'tf2-sku';
+import SKU from 'tf2-sku';
 
 @Injectable()
 export class PricesService {
