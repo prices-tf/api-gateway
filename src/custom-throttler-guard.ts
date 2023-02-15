@@ -8,6 +8,6 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
   }
 
   protected getTracker(req: Record<string, any>): string {
-    return req.ips?.length ? req.ips[0] : req.ip;
+    return req.ip;
   }
 }

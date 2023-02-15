@@ -24,9 +24,7 @@ export class InternalGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
-    const ip = req.ips?.length ? req.ips[0] : req.ip;
-
     // Only allow private ips
-    return isPrivateIP(ip);
+    return isPrivateIP(req.ip);
   }
 }
