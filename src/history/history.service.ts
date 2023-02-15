@@ -35,26 +35,4 @@ export class HistoryService {
       .toPromise()
       .then((response) => response.data);
   }
-
-  intervals(
-    sku: string,
-    interval: number,
-    from?: Date,
-    to?: Date,
-  ): Promise<History[]> {
-    const url = `${
-      this.configService.get<Services>('services').history
-    }/history/${sku}/interval`;
-
-    return this.httpService
-      .get(url, {
-        params: {
-          interval,
-          from,
-          to,
-        },
-      })
-      .toPromise()
-      .then((response) => response.data);
-  }
 }
