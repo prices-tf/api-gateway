@@ -65,7 +65,12 @@ export class PricesController {
     )
     query: GetPricesDto,
   ): Promise<Paginated<Price>> {
-    return this.priceService.getAll(query.page, query.limit, query.order);
+    return this.priceService.getAll(
+      query.page,
+      query.limit,
+      query.order,
+      query.orderBy,
+    );
   }
 
   @Get(':sku')

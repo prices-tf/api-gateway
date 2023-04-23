@@ -22,6 +22,7 @@ export class PricesService {
     page?: number,
     limit = 100,
     order?: 'ASC' | 'DESC',
+    orderBy?: 'createdAt' | 'updatedAt',
   ): Promise<Paginated<Price>> {
     const url = `${this.configService.get<Services>('services').prices}/prices`;
 
@@ -31,6 +32,7 @@ export class PricesService {
           page,
           limit,
           order,
+          orderBy,
         },
       })
       .toPromise()

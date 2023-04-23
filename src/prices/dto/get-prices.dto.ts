@@ -7,6 +7,11 @@ enum OrderEnum {
   DESC = 'DESC',
 }
 
+enum OrderByEnum {
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+}
+
 export class GetPricesDto {
   @ApiProperty({
     description: 'Page to request',
@@ -41,4 +46,14 @@ export class GetPricesDto {
   @IsOptional()
   @IsEnum(OrderEnum)
   readonly order: OrderEnum;
+
+  @ApiProperty({
+    required: false,
+    enum: OrderByEnum,
+    enumName: 'OrderByEnum',
+    description: 'Ordering the prices depending on the specified property',
+  })
+  @IsOptional()
+  @IsEnum(OrderByEnum)
+  readonly orderBy: OrderByEnum;
 }
